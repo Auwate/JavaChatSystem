@@ -11,9 +11,10 @@ import java.net.Socket;
  * Server: The Server class is designed to fulfill requests from various processes and establish
  * incoming connections.
  */
-public class Server {
+public class Server implements Runnable {
 
     private final ServerSocket serverSocket;
+    private boolean requestServerToClose = false;
 
     public Server (ServerSocket serverSocket) {
 
@@ -22,16 +23,33 @@ public class Server {
     }
 
     /**
+     * isRequestedToClose(): This method returns the current value of requestServerToClose,
+     * which is used in the startServer() method.
+     * @return boolean -> Current value of requestServerToClose.
+     */
+    public boolean isRequestedToClose () {
+        return this.requestServerToClose;
+    }
+
+    /**
+     * requestClose(): This method is to help test the Server class, especially with
+     * the startServer() method.
+     */
+    public void requestClose() {
+        this.requestServerToClose = true;
+    }
+
+    /**
      * startServer (): Most important method, as it is where the Server will be most of the time.
      * Specifically, it connects clients to the ServerSocket and redirects them.
      */
-    public void startServer () {
+    public boolean startServer () {
 
         try {
 
             ChatRoomHandler room = new ChatRoomHandler("DefaultChatRoom");
 
-            while (!serverSocket.isClosed()) {
+            while (!serverSocket.isClosed() && !isRequestedToClose()) {
 
                 Socket socket = serverSocket.accept();
                 ClientHandler clientHandler = new ClientHandler(room, socket);
@@ -47,6 +65,8 @@ public class Server {
             closeEverything(serverSocket);
 
         }
+
+        return true;
 
     }
 
@@ -87,7 +107,9 @@ public class Server {
 
             ServerSocket serverSocket = new ServerSocket(1234);
             Server server = new Server(serverSocket);
-            server.startServer();
+
+            Thread thread = new Thread (server);
+            thread.start();
 
         }
 
@@ -96,6 +118,17 @@ public class Server {
             exception.printStackTrace();
 
         }
+
+    }
+
+    /**
+     * run(): This method is used to start the Server, which allows Clients to start
+     * joining.
+     */
+    @Override
+    public void run() {
+
+        startServer();
 
     }
 

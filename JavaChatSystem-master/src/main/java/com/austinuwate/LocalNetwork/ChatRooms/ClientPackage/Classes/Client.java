@@ -53,7 +53,7 @@ public class Client {
      * Index 0 = Thread that receives messages
      * Index 1 = Thread that sends messages
      */
-    public void startClient () {
+    public boolean startClient () {
 
         Thread[] messageThreads = new Thread[2];
         preOperations();
@@ -65,6 +65,8 @@ public class Client {
 
         messageThreads[0] = listenForMessages;
         messageThreads[1] = sendMessages;
+
+        return true;
 
     }
 
