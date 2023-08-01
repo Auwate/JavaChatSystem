@@ -1,6 +1,8 @@
 package com.austinuwate.LocalNetwork.ChatRooms.ClientPackage.Classes;
 
-import com.austinuwate.LocalNetwork.ChatRooms.ClientPackage.Interfaces.UserInteraction;
+import com.austinuwate.LocalNetwork.ChatRooms.ClientPackage.Interfaces.ClientUserInteraction;
+import com.austinuwate.LocalNetwork.ChatRooms.ClientPackage.Threads.ReceiveMessageThread;
+import com.austinuwate.LocalNetwork.ChatRooms.ClientPackage.Threads.SendMessageThread;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -12,7 +14,7 @@ public class Client {
 
     private final Socket socket;
     private ClientIO clientIO;
-    private UserInteraction clientInterface;
+    private ClientUserInteraction clientInterface;
 
     public Client (Socket socket) {
 
@@ -24,65 +26,61 @@ public class Client {
         }
         catch (IOException exception) {
             exception.printStackTrace();
-            closeEverything(this.socket, this.clientIO, clientInterface);
+            closeEverything();
         }
 
     }
 
     /**
-     * sendMessages (): This is the method that the user will stay on the most.
+     * Returns the clientIO, which is used in the receiveMessage/sendMessage threads
+     * @return -> clientIO object
      */
-    public void sendMessages () {
+    public synchronized ClientIO getClientIO () {
+        return clientIO;
+    }
 
-        while ( socket.isConnected() ) {
+    /**
+     * Returns the clientInterface, which is used in the sendMessage threads
+     * @return UserInterface object
+     */
+    public synchronized ClientUserInteraction getClientInterface () {
+        return clientInterface;
+    }
 
-            clientIO.sendMessage(clientInterface.writeMessage());
+    /**
+     * startClient(): Similar to the startServer() method in the Server class, this will
+     * start the important operations and processes required to run the client.
+     * Index 0 = Thread that receives messages
+     * Index 1 = Thread that sends messages
+     */
+    public void startClient () {
 
-        }
+        Thread[] messageThreads = new Thread[2];
+        preOperations();
+
+        Thread listenForMessages = new Thread(new ReceiveMessageThread(this));
+        listenForMessages.start();
+        Thread sendMessages = new Thread (new SendMessageThread(this));
+        sendMessages.start();
+
+        messageThreads[0] = listenForMessages;
+        messageThreads[1] = sendMessages;
 
     }
 
     /**
-     * receiveMessages (): This is a threaded method that will run for as long as the user is
-     * using the program.
+     * preOperations(): This method gets the username for the client.
      */
-    public void receiveMessages () {
+    public void preOperations () {
 
-        new Thread (() -> {
-
-            while ( socket.isConnected() ) {
-
-                try {
-
-                    String message = clientIO.listenForMessage();
-
-                    if ( message == null ) {
-
-                        throw new NullPointerException();
-
-                    }
-
-                    clientInterface.printMessage( message );
-
-                }
-
-                catch (NullPointerException exception) {
-
-                    exception.printStackTrace();
-                    closeEverything( socket, clientIO, clientInterface );
-
-                }
-
-            }
-
-        }).start();
+        clientIO.sendMessage(clientInterface.preOperations());
 
     }
 
     /**
      * closeEverything (): This method attempts to closeEverything available to the Client.
      */
-    public void closeEverything (Socket socket, ClientIO clientIO, UserInteraction clientInterface) {
+    public void closeEverything () {
 
         try {
 
@@ -117,8 +115,7 @@ public class Client {
         try {
 
             Client client = new Client (new Socket("localhost", 1234));
-            client.receiveMessages();
-            client.sendMessages();
+            client.startClient();
 
         }
 

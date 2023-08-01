@@ -1,6 +1,6 @@
 package com.austinuwate.LocalNetwork.ChatRooms.ClientPackage.Classes;
 
-import com.austinuwate.LocalNetwork.ChatRooms.ClientPackage.Interfaces.UserInteraction;
+import com.austinuwate.LocalNetwork.ChatRooms.ClientPackage.Interfaces.ClientUserInteraction;
 
 import java.util.Scanner;
 
@@ -11,7 +11,7 @@ import java.util.Scanner;
  * Currently, ClientInterface will only be doing console commands. Later, with JavaFX,
  * I will extend this class to include GUI interfaces.
  */
-public class ClientInterface implements UserInteraction {
+public class ClientInterface implements ClientUserInteraction {
 
     private final Scanner userInput = new Scanner(System.in);
 
@@ -29,15 +29,23 @@ public class ClientInterface implements UserInteraction {
 
     }
 
-    @Override
     public String askForUsername() {
-        return ( "01"+userInput.nextLine() );
+        return ( "~/"+userInput.nextLine() );
     }
 
     @Override
     public void close() {
 
         System.exit(0);
+
+    }
+
+    @Override
+    public String preOperations () {
+
+        System.out.println("Enter your username:");
+
+        return askForUsername();
 
     }
 

@@ -19,15 +19,39 @@ public class ClientHandler implements Runnable {
     private final CHandlerIO IO;
     private final Socket socket;
 
-    public ClientHandler(ChatRoomHandler currentChatRoom, Socket socket) {
+    public ClientHandler(ChatRoomHandler room, Socket socket) {
 
-        this.currentChatRoom = currentChatRoom;
-        this.currentChatRoom.addClient(this);
+        currentChatRoom = room;
         this.socket = socket;
         IO = new ClientHandlerIO(this.socket);
         clientProperties = new ClientHandlerProperties("N/A");
 
     }
+
+    /*
+     * setCurrentChatRoom(): Sets the clientHandler's chat room.
+     * @param name -> Chat room our client would like to join.
+     */
+    /*public void setCurrentChatRoom (String name) {
+
+        for (ChatRoomHandler room : currentChatRoom.getListOfRooms()) {
+
+            if (room.getChatRoomName().equals(name)) {
+                this.currentChatRoom = room;
+            }
+
+        }
+
+    }*/
+
+    /*
+     * getCurrentChatRoom (): Returns the clientHandler's chat room.
+     * @return -> Chat room the user is in currently.
+     */
+    /*public ChatRoomHandler getCurrentChatRoom () {
+        return this.currentChatRoom;
+    }
+    /*
 
     /**
      * getUserID (): Gets the userID of its properties object
@@ -39,14 +63,15 @@ public class ClientHandler implements Runnable {
 
     }
 
-    /**
+    /*
      * setUsername (String): Because of the way the program is structured, the
      * user should be able to change their username whenever they want
      * @param username -> Username to change to
      */
-    public void setUsername (String username ) {
+    /*public void setUsername (String username ) {
         this.clientProperties.setUserName(username);
-    }
+    }*/
+
 
     /**
      * fromClient (): This method sends messages FROM the Client
@@ -62,6 +87,7 @@ public class ClientHandler implements Runnable {
             }
             else if (message.startsWith("~/")) {
                 clientProperties.setUserName(message.substring(2));
+                currentChatRoom.addClient(this);
             }
             else {
                 currentChatRoom.broadcastMessage( message, this.clientProperties.getUserName() ,this.clientProperties.getUserID() );
@@ -80,10 +106,7 @@ public class ClientHandler implements Runnable {
         if (this.currentChatRoom != null) {
             this.currentChatRoom.removeClient(this);
         }
-
-        if (this.IO != null) {
-            IO.close();
-        }
+        IO.close();
 
     }
 

@@ -29,12 +29,12 @@ public class Server {
 
         try {
 
-            ChatRoomHandler chatroom = new ChatRoomHandler();
+            ChatRoomHandler room = new ChatRoomHandler("DefaultChatRoom");
 
             while (!serverSocket.isClosed()) {
 
                 Socket socket = serverSocket.accept();
-                ClientHandler clientHandler = new ClientHandler(chatroom, socket);
+                ClientHandler clientHandler = new ClientHandler(room, socket);
                 Thread thread = new Thread (clientHandler);
                 thread.start();
 

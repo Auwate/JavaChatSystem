@@ -13,19 +13,32 @@ import java.util.List;
  */
 public class ChatRoomHandler {
 
-    private final List<ClientHandler> listOfClients;
+    static volatile List<ChatRoomHandler> listOfRooms = new ArrayList<>();
 
-    public ChatRoomHandler () {
+    private volatile List<ClientHandler> listOfClients;
+    private String chatRoomName;
+
+    public ChatRoomHandler (String chatRoomName) {
 
         listOfClients = new ArrayList<>();
+        listOfRooms.add(this);
+        this.chatRoomName = chatRoomName;
 
     }
 
-    public void addClient (ClientHandler client) {
+    //public synchronized void addChatRoom () {this.getListOfRooms().add(this);}
+
+    //public synchronized List<ChatRoomHandler> getListOfRooms () {return listOfRooms;}
+
+    //public synchronized void setChatRoomName ( String chatRoomName ) {this.chatRoomName = chatRoomName;}
+
+    //public synchronized String getChatRoomName () {return this.chatRoomName;}
+
+    public synchronized void addClient (ClientHandler client) {
         listOfClients.add(client);
     }
 
-    public void removeClient (ClientHandler client) {
+    public synchronized void removeClient (ClientHandler client) {
         listOfClients.remove(client);
     }
 
