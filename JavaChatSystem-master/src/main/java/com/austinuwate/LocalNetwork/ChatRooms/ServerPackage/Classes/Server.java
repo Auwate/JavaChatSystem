@@ -107,6 +107,7 @@ public class Server implements Runnable {
 
             ServerSocket serverSocket = new ServerSocket(1234);
             Server server = new Server(serverSocket);
+            server.closeEverything(serverSocket);
 
             Thread thread = new Thread (server);
             thread.start();

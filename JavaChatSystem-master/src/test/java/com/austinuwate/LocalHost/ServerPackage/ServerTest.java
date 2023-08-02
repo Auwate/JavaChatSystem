@@ -13,6 +13,34 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ServerTest {
 
     /**
+     * This test returns the value of isRequestedToClose () after requesting
+     * to close
+     */
+    @Test
+    void requestCloseShouldReturnTrue () {
+
+        ServerSocket testServerSocket = null;
+
+        try {
+            testServerSocket = new ServerSocket(1234);
+        }
+
+        catch (IOException exception) {
+
+            exception.printStackTrace();
+            fail();
+
+        }
+
+        Server testServer = new Server(testServerSocket);
+        testServer.requestClose();
+        assertTrue(testServer.isRequestedToClose());
+
+        testServer.closeEverything(testServerSocket);
+
+    }
+
+    /**
      * This test sets the isRequestedToClose field to true and tests that it closes
      * immediately.
      */
@@ -34,13 +62,7 @@ public class ServerTest {
         testServer.requestClose();
         assertTrue (testServer.startServer());
 
-        try {
-            testServerSocket.close();
-        }
-        catch (IOException exception) {
-            exception.printStackTrace();
-            fail();
-        }
+        testServer.closeEverything(testServerSocket);
 
     }
 
@@ -81,13 +103,7 @@ public class ServerTest {
 
         assertFalse(test.isAlive());
 
-        try {
-            testServerSocket.close();
-        }
-        catch (IOException exception) {
-            exception.printStackTrace();
-            fail();
-        }
+        testServer.closeEverything(testServerSocket);
 
     }
 
