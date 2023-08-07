@@ -16,7 +16,7 @@ public class ClientHandler implements Runnable {
 
     private final ChatRoomHandler currentChatRoom;
     private final CHandlerProperties clientProperties;
-    private final CHandlerIO IO;
+    private CHandlerIO IO;
     private final Socket socket;
 
     public ClientHandler(ChatRoomHandler room, Socket socket) {
@@ -44,23 +44,54 @@ public class ClientHandler implements Runnable {
 
     }*/
 
-    /*
+    /**
+     * getClientProperties (): Returns this object's CHandlerProperties
+     * @return clientProperties
+     */
+    public CHandlerProperties getCHandlerProperties () {
+        return this.clientProperties;
+    }
+
+    /**
+     * getSocket(): Returns this object's Socket object
+     * @return socket
+     */
+    public Socket getSocket () {
+        return this.socket;
+    }
+
+    /**
      * getCurrentChatRoom (): Returns the clientHandler's chat room.
      * @return -> Chat room the user is in currently.
      */
-    /*public ChatRoomHandler getCurrentChatRoom () {
+    public ChatRoomHandler getCurrentChatRoom () {
         return this.currentChatRoom;
     }
-    /*
+
 
     /**
      * getUserID (): Gets the userID of its properties object
      * @return -> UserID
      */
     public String getUserID () {
-
         return this.clientProperties.getUserID();
+    }
 
+    /**
+     * getIO (): Returns the IO object held by this object
+     * @return -> ClientHandlerIO
+     */
+    public CHandlerIO getIO () {
+        return this.IO;
+    }
+
+    /**
+     * setIO (CHandlerIO): Sets our current IO to the new implementation.
+     * CURRENTLY ONLY USED IN TESTING
+     * @param IO -> New IO
+     */
+    public void setIO (CHandlerIO IO) {
+        this.IO = IO;
     }
 
     /*

@@ -62,7 +62,7 @@ public class Server implements Runnable {
 
         catch ( IOException exception ) {
 
-            closeEverything(serverSocket);
+            closeEverything();
 
         }
 
@@ -72,9 +72,8 @@ public class Server implements Runnable {
 
     /**
      * closeEverything (): If exceptions occur where the Server is operating, try to close everything.
-     * @param serverSocket -> Server's socket hub
      */
-    public void closeEverything (ServerSocket serverSocket) {
+    public void closeEverything () {
 
         try {
 
@@ -107,7 +106,6 @@ public class Server implements Runnable {
 
             ServerSocket serverSocket = new ServerSocket(1234);
             Server server = new Server(serverSocket);
-            server.closeEverything(serverSocket);
 
             Thread thread = new Thread (server);
             thread.start();

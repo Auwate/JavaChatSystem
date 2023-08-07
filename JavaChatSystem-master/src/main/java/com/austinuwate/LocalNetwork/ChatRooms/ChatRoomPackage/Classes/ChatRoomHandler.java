@@ -28,7 +28,7 @@ public class ChatRoomHandler {
 
     //public synchronized void addChatRoom () {this.getListOfRooms().add(this);}
 
-    //public synchronized List<ChatRoomHandler> getListOfRooms () {return listOfRooms;}
+    public static synchronized List<ChatRoomHandler> getListOfRooms () {return listOfRooms;}
 
     //public synchronized void setChatRoomName ( String chatRoomName ) {this.chatRoomName = chatRoomName;}
 

@@ -28,6 +28,19 @@ public class ClientHandlerIO implements CHandlerIO{
     }
 
     /**
+     * setIOForTests (BufferedReader, BufferedWriter): This method is ONLY used in
+     * the testing methods, as it changes the IO to whatever the test requires.
+     * @param br -> BufferedReader object
+     * @param bw -> BufferedWriter object
+     */
+    public void setIOForTests (BufferedReader br, BufferedWriter bw) {
+
+        this.bufferedReader = br;
+        this.bufferedWriter = bw;
+
+    }
+
+    /**
      * sendMessageToClient (String): This method echos a message sent from
      * other clients in a chatroom.
      * @param message -> Message that will be sent to the client

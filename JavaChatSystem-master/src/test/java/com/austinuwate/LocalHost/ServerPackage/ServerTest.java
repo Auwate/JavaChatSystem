@@ -36,7 +36,7 @@ public class ServerTest {
         testServer.requestClose();
         assertTrue(testServer.isRequestedToClose());
 
-        testServer.closeEverything(testServerSocket);
+        testServer.closeEverything();
 
     }
 
@@ -62,7 +62,7 @@ public class ServerTest {
         testServer.requestClose();
         assertTrue (testServer.startServer());
 
-        testServer.closeEverything(testServerSocket);
+        testServer.closeEverything();
 
     }
 
@@ -103,7 +103,7 @@ public class ServerTest {
 
         assertFalse(test.isAlive());
 
-        testServer.closeEverything(testServerSocket);
+        testServer.closeEverything();
 
     }
 
